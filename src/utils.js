@@ -75,6 +75,6 @@ async function retrieveSigningKeys(jwks) {
   return results;
 }
 
-export default {
+module.exports = {
   retrieveSigningKeys
 };
