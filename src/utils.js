@@ -1,5 +1,5 @@
-const jose = require('jose');
-const JwksError = require('./errors/JwksError');
+import { importJWK, exportSPKI } from 'jose';
+import JwksError from './errors/JwksError';
 
 function resolveAlg(jwk) {
   if (jwk.alg) {
@@ -43,14 +43,14 @@ async function retrieveSigningKeys(jwks) {
 
   for (const jwk of jwks) {
     try {
-      const key = await jose.importJWK({ ...jwk, ext: true }, resolveAlg(jwk));
+      const key = await importJWK({ ...jwk, ext: true }, resolveAlg(jwk));
       if (key.type !== 'public') {
         continue;
       }
       let getSpki;
       switch (key[Symbol.toStringTag]) {
         case 'CryptoKey': {
-          const spki = await jose.exportSPKI(key);
+          const spki = await exportSPKI(key);
           getSpki = () => spki;
           break;
         }
@@ -75,6 +75,6 @@ async function retrieveSigningKeys(jwks) {
   return results;
 }
 
-module.exports = {
+export default {
   retrieveSigningKeys
 };

@@ -1,7 +1,7 @@
-const jose = require('jose');
-const { ArgumentError } = require('../errors');
-const { JwksClient } = require('../JwksClient');
-const supportedAlg = require('./config');
+import { decodeJwt, decodeProtectedHeader } from 'jose';
+import { ArgumentError } from '../errors';
+import { JwksClient } from '../JwksClient';
+import { includes } from './config';
 
 const handleSigningKeyError = (err, cb) => {
   // If we didn't find a match, can't provide a key.
@@ -15,7 +15,7 @@ const handleSigningKeyError = (err, cb) => {
   }
 };
 
-module.exports.passportJwtSecret = function (options) {
+export function passportJwtSecret (options) {
   if (options === null || options === undefined) {
     throw new ArgumentError('An options object must be provided when initializing passportJwtSecret');
   }
@@ -31,14 +31,14 @@ module.exports.passportJwtSecret = function (options) {
     let decoded;
     try {
       decoded = {
-        payload: jose.decodeJwt(rawJwtToken),
-        header: jose.decodeProtectedHeader(rawJwtToken)
+        payload: decodeJwt(rawJwtToken),
+        header: decodeProtectedHeader(rawJwtToken)
       };
     } catch (err) {
       decoded = null;
     }
 
-    if (!decoded || !supportedAlg.includes(decoded.header.alg)) {
+    if (!decoded || !includes(decoded.header.alg)) {
       return cb(null, null);
     }
 
@@ -49,4 +49,4 @@ module.exports.passportJwtSecret = function (options) {
         onError(err, (newError) => cb(newError, null));
       });
   };
-};
+}
