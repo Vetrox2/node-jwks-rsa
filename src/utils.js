@@ -1,5 +1,5 @@
 import { importJWK, exportSPKI } from 'jose';
-import JwksError from './errors/JwksError';
+const JwksError = require('./errors/JwksError');
 
 function resolveAlg(jwk) {
   if (jwk.alg) {
