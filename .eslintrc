@@ -1,7 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "ecmaVersion": 2018
   },
   "rules": {
     "array-bracket-spacing": [2, "always"],

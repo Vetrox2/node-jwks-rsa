@@ -1,4 +1,3 @@
-import { decodeJwt, decodeProtectedHeader } from 'jose';
 const { ArgumentError } = require('../errors');
 const { JwksClient } = require('../JwksClient');
 const supportedAlg = require('./config');
@@ -27,8 +26,10 @@ module.exports.passportJwtSecret = function (options) {
   const client = new JwksClient(options);
   const onError = options.handleSigningKeyError || handleSigningKeyError;
 
-  return function secretProvider(req, rawJwtToken, cb) {
+  return async function secretProvider(req, rawJwtToken, cb) {
+    const {decodeJwt, decodeProtectedHeader} = await import('jose');
     let decoded;
+
     try {
       decoded = {
         payload: decodeJwt(rawJwtToken),

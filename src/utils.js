@@ -1,4 +1,3 @@
-import { importJWK, exportSPKI } from 'jose';
 const JwksError = require('./errors/JwksError');
 
 function resolveAlg(jwk) {
@@ -35,6 +34,7 @@ function resolveAlg(jwk) {
 }
 
 async function retrieveSigningKeys(jwks) {
+  const {importJWK, exportSPKI} = await import('jose');
   const results = [];
 
   jwks = jwks
